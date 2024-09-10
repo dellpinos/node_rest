@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { body } from 'express-validator';
-import { createProduct, getProducts } from './handlers/product';
+import { body, param } from 'express-validator';
+import { createProduct, deleteProduct, getProductById, getProducts, updateAvailability, updateProduct } from './handlers/product';
 import { handleInputErrors } from './middleware';
 
 const router = Router();
@@ -8,8 +8,13 @@ const router = Router();
 // Routing
 router.get('/', getProducts);
 
-router.post('/', 
+router.get('/:id', 
+    param('id').isInt().withMessage('ID inválido'),
+    handleInputErrors,
+    getProductById
+);
 
+router.post('/', 
     // Validación
     body('name').notEmpty().withMessage('El nombre del producto es obligatorio'),
     body('price')
@@ -21,16 +26,30 @@ router.post('/',
 );
 
 
-router.put('/', (req, res) => {
-    res.json("Desde PUT");
-});
+router.put('/:id', 
+    // Validación
+    body('name').notEmpty().withMessage('El nombre del producto es obligatorio'),
+    body('price')
+        .isNumeric().withMessage('Formato inválido')
+        .notEmpty().withMessage('El precio del producto es obligatorio')
+        .custom(value => value > 0).withMessage('El precio debe ser mayor a cero'),
+    body('availability')
+        .notEmpty().withMessage('El campo availability es obligatorio')
+        .isBoolean().withMessage('Formato inválido'),
+    handleInputErrors,
+    updateProduct
+);
 
-router.patch('/', (req, res) => {
-    res.json("Desde Patch");
-});
+router.patch('/:id', 
+    param('id').isInt().withMessage('ID inválido'),
+    handleInputErrors,
+    updateAvailability
+);
 
-router.delete('/', (req, res) => {
-    res.json("Desde DELETE");
-});
+router.delete('/:id',
+    param('id').isInt().withMessage('ID inválido'),
+    handleInputErrors,
+    deleteProduct
+);
 
 export default router;
