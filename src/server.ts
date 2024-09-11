@@ -26,6 +26,10 @@ server.use(express.json());
 // Routes
 server.use('/api/products', router);
 
+server.get('/api', (req, res) => {
+    res.json({msg: "Desde API"})
+})
+
 
 
 export default server;
