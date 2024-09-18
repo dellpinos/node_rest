@@ -1,10 +1,11 @@
 import { exit } from 'node:process';
 import db from '../config/db';
+import colors from 'colors';
 
 const clearDB = async () => {
     try {
         await db.sync({force:true});
-        console.log('Datos eliminados correctamente')
+        console.log(colors.bgGreen.black.bold('Registros eliminados correctamente'));
         exit();
     } catch (error) {
         console.log(error);
