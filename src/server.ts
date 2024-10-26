@@ -28,6 +28,9 @@ const server = express();
 // Permitir Conexiones
 const corsOptions : CorsOptions = {
     origin: function(origin, callback) {
+        console.log(colors.bgBlue.white.bold("Origen de la solicitud:"), colors.cyan(origin));
+        console.log(colors.bgGreen.white.bold("URL permitida:"), colors.yellow(process.env.FRONTEND_URL));
+
         if( origin === process.env.FRONTEND_URL){
             callback(null, true);
         } else {
